@@ -1,21 +1,22 @@
 import allure
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from curl import Urls
 
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
 
-    @property
-    def url(self):
-        return self.driver.current_url
-
+    def open_main_page(self):
+        self.driver.get(Urls.MAIN_PAGE)
+    
+    def open_order_page(self):
+        self.driver.get(Urls.ORDER_PAGE)
+    
     @allure.step("Подождать видимости элемента")
     def wait_for_element(self, locator, timeout=10):
-        return WebDriverWait(self.driver, timeout).until(
-            EC.visibility_of_element_located(locator)
-        )
+        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
     @allure.step("Скролл до элемента")
     def scroll_to_element(self, locator, timeout=10):
@@ -66,3 +67,9 @@ class BasePage:
         if len(handles) > 1:
             self.driver.close()
             self.driver.switch_to.window(handles[0])
+ 
+    @allure.step("Ожидание URL")
+    def wait_for_url(self, url, timeout=10):
+        def url_checker(driver):
+            return url in driver.current_url
+        return WebDriverWait(self.driver, timeout).until(url_checker)

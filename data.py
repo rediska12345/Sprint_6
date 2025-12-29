@@ -8,7 +8,6 @@ class TestData:
         'phone': '+79975648273',
         'date': '20.12.2025',
         'period_index': 0,
-        'color': 'black',
         'comment': 'Позвонить за час до доставки'
     }
     
@@ -19,8 +18,7 @@ class TestData:
         'station_index': 3, 
         'phone': '+79971575367',
         'date': '25.12.2025',
-        'period_index': 3, 
-        'color': 'grey',
+        'period_index': 3,
         'comment': 'Оставить у двери'
     }
     

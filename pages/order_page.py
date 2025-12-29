@@ -1,7 +1,6 @@
 import allure
 from pages.base_page import BasePage
 from locators.order_page_locators import OrderPageLocators
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -15,11 +14,8 @@ class OrderPage(BasePage):
         
         # Выбор станции метро
         self.click_on_element(OrderPageLocators.STATION_SELECT)
-        station_options = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_all_elements_located(OrderPageLocators.STATION_OPTION)
-        )
-        if station_index < len(station_options):
-            station_options[station_index].click()
+        station_options = self.wait.until(EC.visibility_of_all_elements_located(OrderPageLocators.STATION_OPTION))
+        station_options[station_index].click()
         
         self.send_keys_to_input(OrderPageLocators.PHONE_INPUT, phone)
     
@@ -27,26 +23,30 @@ class OrderPage(BasePage):
     def click_next_button(self):
         self.click_on_element(OrderPageLocators.NEXT_BUTTON)
     
-    @allure.step("Заполнить вторую форму заказа")
-    def fill_second_form(self, date, period_index, color, comment):
+    @allure.step("Заполнить вторую форму заказа с черным самокатом")
+    def fill_second_form_with_black_scooter(self, date, period_index, comment):
+        self._fill_second_form_common(date, period_index, comment)
+        self.click_on_element(OrderPageLocators.COLOR_BLACK)
+    
+    @allure.step("Заполнить вторую форму заказа с серым самокатом")
+    def fill_second_form_with_grey_scooter(self, date, period_index, comment):
+        self._fill_second_form_common(date, period_index, comment)
+        self.click_on_element(OrderPageLocators.COLOR_GREY)
+    
+    @allure.step("Заполнить общие поля второй формы заказа")
+    def _fill_second_form_common(self, date, period_index, comment):
         # Выбор даты
         self.send_keys_to_input(OrderPageLocators.DATE_INPUT, date)
         
         # Выбор срока аренды
         self.click_on_element(OrderPageLocators.RENTAL_PERIOD_DROPDOWN)
-        period_options = WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(OrderPageLocators.RENTAL_PERIOD_OPTIONS))
-        if period_index < len(period_options):
-            period_options[period_index].click()
-        
-        # Выбор цвета
-        if color == "black":
-            self.click_on_element(OrderPageLocators.COLOR_BLACK)
-        elif color == "grey":
-            self.click_on_element(OrderPageLocators.COLOR_GREY)
+        period_options = self.wait.until(
+            EC.visibility_of_all_elements_located(OrderPageLocators.RENTAL_PERIOD_OPTIONS)
+        )
+        period_options[period_index].click()
         
         # Комментарий
-        if comment:
-            self.send_keys_to_input(OrderPageLocators.COMMENT_INPUT, comment)
+        self.send_keys_to_input(OrderPageLocators.COMMENT_INPUT, comment)
     
     @allure.step("Нажать кнопку 'Заказать'")
     def click_order_button(self):
@@ -64,8 +64,8 @@ class OrderPage(BasePage):
         except:
             return False
     
-    @allure.step("Заполнить полную форму заказа")
-    def complete_order(self, order_data):
+    @allure.step("Заполнить полную форму заказа c черным самокатом")
+    def complete_order_with_black_scooter(self, order_data):
         # Первая форма
         self.fill_first_form(
             order_data['name'],
@@ -77,10 +77,32 @@ class OrderPage(BasePage):
         self.click_next_button()
         
         # Вторая форма
-        self.fill_second_form(
+        self.fill_second_form_with_black_scooter(
             order_data['date'],
             order_data['period_index'],
-            order_data['color'],
+            order_data['comment']
+        )
+        self.click_order_button()
+        self.confirm_order()
+        
+        return self.is_order_successful()
+    
+    @allure.step("Заполнить полную форму заказа с серым самокатом")
+    def complete_order_with_grey_scooter(self, order_data):
+        # Первая форма
+        self.fill_first_form(
+            order_data['name'],
+            order_data['surname'],
+            order_data['address'],
+            order_data['station_index'],
+            order_data['phone']
+        )
+        self.click_next_button()
+        
+        # Вторая форма с серым самокатом
+        self.fill_second_form_with_grey_scooter(
+            order_data['date'],
+            order_data['period_index'],
             order_data['comment']
         )
         self.click_order_button()

@@ -31,8 +31,8 @@ class MainPageLocators:
     ]
     
     # Логотипы
-    SCOOTER_LOGO = (By.XPATH, "//a[@class='Header_LogoScooter__3lsAR']")
-    YANDEX_LOGO = (By.XPATH, "//a[@class='Header_LogoYandex__3TSOI']")
+    SCOOTER_LOGO = (By.XPATH, "//img[contains(@src, 'scooter')]")
+    YANDEX_LOGO = (By.XPATH, "//img[contains(@src, 'ya.svg')]")
     
     # Кнопка принятия куки
     COOKIE_BUTTON = (By.ID, "rcc-confirm-button")
