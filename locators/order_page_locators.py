@@ -13,8 +13,8 @@ class OrderPageLocators:
     
     # Форма "Про аренду"
     DATE_INPUT = (By.XPATH, ".//input[@placeholder='* Когда привезти самокат']")
-    RENTAL_PERIOD_DROPDOWN = (By.XPATH, ".//div[text()='* Срок аренды']/..")
-    RENTAL_PERIOD_OPTIONS = (By.XPATH, ".//div[@class='Dropdown-option']")
+    RENTAL_PERIOD_DROPDOWN = (By.XPATH, "//div[contains(@class, 'Dropdown-placeholder')]")
+    RENTAL_PERIOD_OPTIONS = (By.XPATH, "//div[@class='Dropdown-menu' and @aria-expanded='true']")
     COLOR_BLACK = (By.ID, "black")
     COLOR_GREY = (By.ID, "grey")
     COMMENT_INPUT = (By.XPATH, ".//input[@placeholder='Комментарий для курьера']")

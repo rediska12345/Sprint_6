@@ -8,7 +8,7 @@ from curl import Urls
 def driver():
     options = Options()
     options.add_argument("--window-size=1200,800")
-    options.add_argument("--headless")
+    #options.add_argument("--headless")
     service = Service()
     driver = webdriver.Firefox(service=service, options=options)
     driver.get(Urls.MAIN_PAGE)

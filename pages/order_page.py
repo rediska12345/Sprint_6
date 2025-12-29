@@ -40,9 +40,7 @@ class OrderPage(BasePage):
         
         # Выбор срока аренды
         self.click_on_element(OrderPageLocators.RENTAL_PERIOD_DROPDOWN)
-        period_options = self.wait.until(
-            EC.visibility_of_all_elements_located(OrderPageLocators.RENTAL_PERIOD_OPTIONS)
-        )
+        period_options = self.wait.until(EC.visibility_of_all_elements_located(OrderPageLocators.RENTAL_PERIOD_OPTIONS))
         period_options[period_index].click()
         
         # Комментарий

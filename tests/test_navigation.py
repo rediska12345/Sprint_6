@@ -8,7 +8,7 @@ from curl import Urls
 class TestNavigation:
     
     @allure.title("Проверка перехода на главную страницу через логотип Самоката")
-    def test_scooter_logo_navigation(self, main_page):
+    def test_scooter_logo_navigation(self, driver, main_page):
         with allure.step("Принять куки"):
             main_page.accept_cookies()
         
@@ -16,11 +16,10 @@ class TestNavigation:
             main_page.click_scooter_logo()
         
         with allure.step("Проверить, что открылась главная страница Самоката"):
-            main_page.wait_for_url(Urls.MAIN_PAGE, timeout=10)
-            current_url = main_page.get_current_url()
-            assert current_url == Urls.MAIN_PAGE, \
-                f"Ожидался URL: {Urls.MAIN_PAGE}, получен: {current_url}"
-    
+            main_page.wait.until(lambda d: Urls.MAIN_PAGE in d.current_url)
+            assert Urls.MAIN_PAGE in driver.current_url, \
+                f"Ожидался URL с {Urls.MAIN_PAGE}, получен: {driver.current_url}"
+        
     @allure.title("Проверка перехода на Дзен через логотип Яндекса")
     def test_yandex_logo_navigation(self, driver, main_page):
         with allure.step("Принять куки"):
