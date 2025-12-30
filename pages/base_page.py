@@ -33,7 +33,7 @@ class BasePage:
         element = self.wait_for_element(locator, timeout)
         element.clear()
         element.send_keys(keys)
-
+        
     @allure.step("Получить текст элемента")
     def get_text_on_element(self, locator, timeout=10):
         element = self.wait_for_element(locator, timeout)
@@ -73,3 +73,31 @@ class BasePage:
         def url_checker(driver):
             return url in driver.current_url
         return WebDriverWait(self.driver, timeout).until(url_checker)
+    
+    def find_element(self, locator, time=10):
+        with allure.step(f"Поиск элемента: {locator}"):
+            return self._wait_for_element(locator, time, find_multiple=False)
+
+    def find_elements(self, locator, time=10):
+        with allure.step(f"Поиск элементов: {locator}"):
+            return self._wait_for_element(locator, time, find_multiple=True)
+     
+    def _wait_for_element(self, locator, time=10, find_multiple=False, visible=False):
+        if find_multiple:
+            if visible:
+                return WebDriverWait(self.driver, time).until(
+                    EC.visibility_of_all_elements_located(locator)
+                )
+            else:
+                return WebDriverWait(self.driver, time).until(
+                    EC.presence_of_all_elements_located(locator)
+                )
+        else:
+            if visible:
+                return WebDriverWait(self.driver, time).until(
+                    EC.visibility_of_element_located(locator)
+                )
+            else:
+                return WebDriverWait(self.driver, time).until(
+                    EC.presence_of_element_located(locator)
+                )

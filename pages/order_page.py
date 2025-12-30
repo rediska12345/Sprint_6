@@ -24,28 +24,35 @@ class OrderPage(BasePage):
         self.click_on_element(OrderPageLocators.NEXT_BUTTON)
     
     @allure.step("Заполнить вторую форму заказа с черным самокатом")
-    def fill_second_form_with_black_scooter(self, date, period_index, comment):
-        self._fill_second_form_common(date, period_index, comment)
+    def fill_second_form_with_black_scooter(self, date, rental_period, comment):
+        self._fill_second_form_common(date, rental_period, comment)
         self.click_on_element(OrderPageLocators.COLOR_BLACK)
     
     @allure.step("Заполнить вторую форму заказа с серым самокатом")
-    def fill_second_form_with_grey_scooter(self, date, period_index, comment):
-        self._fill_second_form_common(date, period_index, comment)
+    def fill_second_form_with_grey_scooter(self, date, rental_period, comment):
+        self._fill_second_form_common(date, rental_period, comment)
         self.click_on_element(OrderPageLocators.COLOR_GREY)
     
     @allure.step("Заполнить общие поля второй формы заказа")
-    def _fill_second_form_common(self, date, period_index, comment):
+    def _fill_second_form_common(self, date, rental_period, comment):
         # Выбор даты
-        self.send_keys_to_input(OrderPageLocators.DATE_INPUT, date)
+        self.send_keys_to_input(OrderPageLocators.DATE_INPUT,date)
+        self.click_on_element(OrderPageLocators.CLIK_BLIK)
         
         # Выбор срока аренды
-        self.click_on_element(OrderPageLocators.RENTAL_PERIOD_DROPDOWN)
-        period_options = self.wait.until(EC.visibility_of_all_elements_located(OrderPageLocators.RENTAL_PERIOD_OPTIONS))
-        period_options[period_index].click()
+        self._select_rental_period(rental_period)
         
         # Комментарий
         self.send_keys_to_input(OrderPageLocators.COMMENT_INPUT, comment)
     
+    def _select_rental_period(self, period):
+        self.click_on_element(OrderPageLocators.RENTAL_PERIOD_DROPDOWN)
+        periods = self.find_elements(OrderPageLocators.RENTAL_PERIOD_OPTIONS)
+        for p in periods:
+            if period in p.text:
+                p.click()
+                return
+            
     @allure.step("Нажать кнопку 'Заказать'")
     def click_order_button(self):
         self.click_on_element(OrderPageLocators.ORDER_BUTTON)
@@ -77,7 +84,7 @@ class OrderPage(BasePage):
         # Вторая форма
         self.fill_second_form_with_black_scooter(
             order_data['date'],
-            order_data['period_index'],
+            order_data['rental_period'],
             order_data['comment']
         )
         self.click_order_button()
@@ -100,7 +107,7 @@ class OrderPage(BasePage):
         # Вторая форма с серым самокатом
         self.fill_second_form_with_grey_scooter(
             order_data['date'],
-            order_data['period_index'],
+            order_data['rental_period'],
             order_data['comment']
         )
         self.click_order_button()
