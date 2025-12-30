@@ -45,6 +45,7 @@ class OrderPage(BasePage):
         # Комментарий
         self.send_keys_to_input(OrderPageLocators.COMMENT_INPUT, comment)
     
+    @allure.step("Выбор срока аренды")
     def _select_rental_period(self, period):
         self.click_on_element(OrderPageLocators.RENTAL_PERIOD_DROPDOWN)
         periods = self.find_elements(OrderPageLocators.RENTAL_PERIOD_OPTIONS)
