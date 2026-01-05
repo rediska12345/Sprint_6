@@ -25,3 +25,4 @@ class OrderPageLocators:
     # Модальное окно успеха
     SUCCESS_MODAL = (By.CLASS_NAME, "Order_Modal__YZ-d3")
     SUCCESS_TITLE = (By.XPATH, ".//div[contains(text(), 'Заказ оформлен')]")
+    ORDER_NUMBER_VALUE = (By.XPATH, "//div[contains(@class, 'Order_Text__2broi')]")

@@ -62,12 +62,15 @@ class OrderPage(BasePage):
     def confirm_order(self):
         self.click_on_element(OrderPageLocators.CONFIRM_ORDER_BUTTON)
     
-    @allure.step("Проверить успешное оформление заказа")
+    @allure.step("Проверка успешного оформления заказа")
     def is_order_successful(self):
         try:
-            self.wait_for_element(OrderPageLocators.SUCCESS_TITLE, timeout=10)
+            self.wait.until(EC.visibility_of_element_located(OrderPageLocators.SUCCESS_TITLE))
+            track_number = self.find_element(OrderPageLocators.ORDER_NUMBER_VALUE).text
+            print(f"Заказ успешно оформлен. Номер трека: {track_number}")
             return True
         except:
+            print("Элемент подтверждения заказа не найден")
             return False
     
     @allure.step("Заполнить полную форму заказа c черным самокатом")
